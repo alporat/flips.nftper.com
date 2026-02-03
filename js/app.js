@@ -43,8 +43,8 @@ const App = (function() {
      * Supports: /flips/0x... or ?wallet=0x...
      */
     function getWalletFromUrl() {
-        // Check path: /flips/0x...
-        const pathMatch = window.location.pathname.match(/\/flips\/?(0x[a-fA-F0-9]{40})/i);
+        // Check path: /0x... (direct wallet in URL)
+        const pathMatch = window.location.pathname.match(/^\/(0x[a-fA-F0-9]{40})/i);
         if (pathMatch) {
             return pathMatch[1].toLowerCase();
         }
@@ -65,8 +65,8 @@ const App = (function() {
     function updateUrlWithWallet(wallet) {
         if (!wallet) return;
 
-        // Use path-based URL: /flips/0x...
-        const newPath = `/flips/${wallet.toLowerCase()}`;
+        // Use path-based URL: /0x...
+        const newPath = `/${wallet.toLowerCase()}`;
         const newUrl = `${window.location.origin}${newPath}`;
 
         // Update URL without reload using History API
@@ -79,7 +79,7 @@ const App = (function() {
      * Clear wallet from URL
      */
     function clearUrlWallet() {
-        const basePath = '/flips';
+        const basePath = '/';
         if (window.history.pushState) {
             window.history.pushState({}, '', basePath);
         }
