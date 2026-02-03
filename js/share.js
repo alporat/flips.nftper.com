@@ -120,7 +120,7 @@ const Share = (function() {
 
         ctx.fillStyle = COLORS.green;
         ctx.font = '900 18px Inter, sans-serif';
-        ctx.fillText('nftper.com/flips', CANVAS_WIDTH / 2, canvasHeight - 30);
+        ctx.fillText('flips.nftper.com', CANVAS_WIDTH / 2, canvasHeight - 30);
     }
 
     /**
@@ -283,7 +283,7 @@ const Share = (function() {
             : `${pnl.toFixed(4)} ETH loss`;
 
         const text = encodeURIComponent(
-            `I made ${pnlText} flipping NFTs! 🔥\n\nCheck your wallet profits at nftper.com/flips`
+            `I made ${pnlText} flipping NFTs! 🔥\n\nCheck your wallet profits at flips.nftper.com`
         );
 
         const url = `https://twitter.com/intent/tweet?text=${text}`;
