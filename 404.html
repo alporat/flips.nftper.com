@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFTPER - Track NFT Profits</title>
+    <meta name="description" content="Free NFT wallet profit tracker. Check your flipping profits across Ethereum, Polygon, Base, Arbitrum, and more.">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="/assets/logo.png" alt="NFTPER" class="logo-icon">
+                <span class="logo-text"><span class="logo-nft">NFT</span><span class="logo-per">PER</span></span>
+            </div>
+            <div class="header-right">
+                <p class="tagline">Track Your NFT Profits</p>
+                <a href="https://nftper.com" class="nav-btn">Get Bidding Bot</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Input Section -->
+        <section id="input-section" class="input-section">
+            <div class="input-card">
+                <h1>Check Wallet Profits</h1>
+                <p class="input-description">Enter any wallet address to see NFT flipping performance</p>
+
+                <form id="check-form" class="check-form">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="wallet-input"
+                            class="wallet-input"
+                            placeholder="Enter wallet address (0x...)"
+                            pattern="^0x[a-fA-F0-9]{40}$"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-row">
+                        <div class="select-group">
+                            <label for="timeframe-select">Timeframe</label>
+                            <select id="timeframe-select" class="timeframe-select">
+                                <option value="1w">1 Week</option>
+                                <option value="1m" selected>1 Month</option>
+                                <option value="3m">3 Months</option>
+                                <option value="6m">6 Months</option>
+                                <option value="1y">1 Year</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+
+                        <div class="select-group">
+                            <label>Chains</label>
+                            <div class="chains-dropdown">
+                                <button type="button" id="initial-chains-btn" class="chains-dropdown-btn">
+                                    Chains <span id="initial-chains-count" class="chains-count">(1)</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"/>
+                                    </svg>
+                                </button>
+                                <div id="initial-chains-menu" class="chains-dropdown-menu hidden">
+                                    <label class="chain-option">
+                                        <input type="checkbox" name="initial-chain" value="ethereum" checked> Ethereum
+                                    </label>
+                                    <label class="chain-option">
+                                        <input type="checkbox" name="initial-chain" value="polygon"> Polygon
+                                    </label>
+                                    <label class="chain-option">
+                                        <input type="checkbox" name="initial-chain" value="base"> Base
+                                    </label>
+                                    <label class="chain-option">
+                                        <input type="checkbox" name="initial-chain" value="arbitrum"> Arbitrum
+                                    </label>
+                                    <label class="chain-option">
+                                        <input type="checkbox" name="initial-chain" value="hyperevm"> HyperEVM
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="check-btn" class="check-btn">
+                            Check Profit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Queue Status Section (Hidden by default) -->
+        <section id="queue-section" class="queue-section hidden">
+            <div class="queue-card">
+                <div class="spinner"></div>
+                <h2 id="queue-status-text">You are #<span id="queue-position">1</span> in queue</h2>
+                <p id="queue-message" class="queue-message">Please wait while we process your request...</p>
+                <button id="cancel-btn" class="cancel-btn">Cancel</button>
+            </div>
+        </section>
+
+        <!-- Results Section (Hidden by default) -->
+        <section id="results-section" class="results-section hidden">
+            <!-- Search Bar in Results -->
+            <div class="results-search-bar">
+                <form id="results-check-form" class="results-form">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input
+                            type="text"
+                            id="results-wallet-input"
+                            class="results-wallet-input"
+                            placeholder="Enter wallet address (0x...)"
+                        >
+                    </div>
+                    <select id="results-timeframe-select" class="results-timeframe-select">
+                        <option value="1w">1 Week</option>
+                        <option value="1m" selected>1 Month</option>
+                        <option value="3m">3 Months</option>
+                        <option value="6m">6 Months</option>
+                        <option value="1y">1 Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+                    <div class="chains-dropdown">
+                        <button type="button" id="chains-dropdown-btn" class="chains-dropdown-btn">
+                            Chains <span class="chains-count">(1)</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+                        <div id="chains-dropdown-menu" class="chains-dropdown-menu hidden">
+                            <label class="chain-option">
+                                <input type="checkbox" value="ethereum" checked> Ethereum
+                            </label>
+                            <label class="chain-option">
+                                <input type="checkbox" value="polygon"> Polygon
+                            </label>
+                            <label class="chain-option">
+                                <input type="checkbox" value="base"> Base
+                            </label>
+                            <label class="chain-option">
+                                <input type="checkbox" value="arbitrum"> Arbitrum
+                            </label>
+                            <label class="chain-option">
+                                <input type="checkbox" value="hyperevm"> HyperEVM
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="results-check-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Summary Stats Grid -->
+            <div class="summary-stats">
+                <div class="stat-box">
+                    <span class="stat-box-label">Total Flips</span>
+                    <span class="stat-box-value" id="flip-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">Winning</span>
+                    <span class="stat-box-value profit" id="winning-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">Losing</span>
+                    <span class="stat-box-value loss" id="losing-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">Total Spend</span>
+                    <span class="stat-box-value" id="total-spend">0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">Total Sold</span>
+                    <span class="stat-box-value" id="total-sold">0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">Total Profit</span>
+                    <span class="stat-box-value large" id="total-pnl">+0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-box-label">ROI</span>
+                    <span class="stat-box-value" id="overall-roi">0%</span>
+                </div>
+            </div>
+
+            <!-- Flips Table -->
+            <div class="flips-table-container">
+                <div class="flips-table-header">
+                    <div class="flips-header-left">
+                        <span class="flips-table-title">NFT Flips</span>
+                        <span class="flips-wallet-info">
+                            of <span id="result-wallet" class="wallet-address">0x1a2b...c4d5</span>
+                            <span class="timeframe-badge" id="timeframe-display">1 Month</span>
+                        </span>
+                    </div>
+                    <div class="flips-header-right">
+                        <span class="flips-table-count" id="flips-count">0 flips</span>
+                        <button id="share-btn" class="share-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                                <polyline points="16 6 12 2 8 6"/>
+                                <line x1="12" y1="2" x2="12" y2="15"/>
+                            </svg>
+                            Share
+                        </button>
+                    </div>
+                </div>
+                <div class="flips-table-wrapper">
+                    <table class="flips-table" id="flips-table">
+                        <thead>
+                            <tr>
+                                <th class="no-sort">NFT</th>
+                                <th data-sort="wallet">Wallet</th>
+                                <th data-sort="entry">Entry <span class="sort-icon">▼</span></th>
+                                <th data-sort="exit">Exit (Net) <span class="sort-icon">▼</span></th>
+                                <th data-sort="profit">Profit <span class="sort-icon">▼</span></th>
+                                <th data-sort="roi">ROI <span class="sort-icon">▼</span></th>
+                                <th data-sort="hold">Hold <span class="sort-icon">▼</span></th>
+                                <th data-sort="date" class="sorted desc">Sale Date <span class="sort-icon">▼</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="flips-list">
+                            <!-- Flip rows will be rendered here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Holdings Section (Still Holding) -->
+            <div id="holdings-section" class="holdings-section hidden">
+                <h3 class="holdings-title">Still Holding</h3>
+                <div class="flips-table-wrapper">
+                    <table class="flips-table holdings-table">
+                        <thead>
+                            <tr>
+                                <th class="no-sort">NFT</th>
+                                <th>Entry</th>
+                                <th>Held For</th>
+                            </tr>
+                        </thead>
+                        <tbody id="holdings-list">
+                            <!-- Holding rows will be rendered here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h3>Share Your Flips</h3>
+
+            <!-- Preview Canvas -->
+            <div class="share-preview">
+                <canvas id="share-canvas" width="400" height="600"></canvas>
+            </div>
+
+            <!-- Share Options -->
+            <div class="share-options">
+                <label class="share-checkbox">
+                    <input type="checkbox" id="hide-wallet-checkbox">
+                    <span>Hide wallet address</span>
+                </label>
+            </div>
+
+            <!-- Share Buttons -->
+            <div class="share-buttons">
+                <button id="copy-image-btn" class="share-action-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy to Clipboard
+                </button>
+                <button id="download-btn" class="share-action-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download
+                </button>
+                <button id="share-x-btn" class="share-action-btn share-x">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    Share to X
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message">Copied to clipboard!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-disclaimer">
+                Results are estimates based on on-chain data and may not be 100% accurate.
+                Gas fees, failed transactions, and complex trades may affect calculations.
+                This tool is for informational purposes only and should not be considered financial advice.
+            </p>
+            <p class="footer-copyright">
+                &copy; 2026 NFTPER. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/queue.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/share.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
